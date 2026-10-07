@@ -1,32 +1,24 @@
 import numpy as np
 import time
-import random
 import matplotlib.pyplot as plt
 
-tamaño = 1000
+TAMAÑO = 1000
 
 
-def versionNumpy(n):
-    # Creamos dos matrices con Numpy de numeros aleatorios entre 0 y 1
-    m1 = np.random.rand(n, n)
-    m2 = np.random.rand(n, n)
+def versionNumpy(m1, m2):
+    inicio = time.perf_counter()
 
-    inicio = time.time()
     multiplicacion = np.dot(m1, m2)  # Hacemos el producto matricial con Numpy usando la funcion dot
 
-    fin = time.time()
+    fin = time.perf_counter()
 
     resultado = fin - inicio
 
     return resultado
 
 
-def versionBucle(n):
-    # Creamos dos matrices con listas de numeros aleatorios entre 0 y 1
-    m1 = [[random.random() for j in range(n)] for i in range(n)]
-    m2 = [[random.random() for j in range(n)] for i in range(n)]
-
-    inicio = time.time()
+def versionBucle(n, m1, m2):
+    inicio = time.perf_counter()
     
     multiplicacion = [[0.0] * n for i in range(n)]  # Creamos la matriz para guardar el resultado de la multiplicacion, inicializada con ceros
 
@@ -34,10 +26,10 @@ def versionBucle(n):
         for j in range(n):  # j recorre las columnas de m2
             suma = 0.0
             for k in range(n):   # k recorre los elementos de la fila i y de la columna j
-                suma = suma + m1[i][k] * m2[k][j] 
+                suma = suma + m1[i, k] * m2[k, j]
             multiplicacion[i][j] = suma
 
-    fin = time.time()
+    fin = time.perf_counter()
 
     resultado = fin - inicio
     
@@ -45,14 +37,17 @@ def versionBucle(n):
 
 
 if __name__ == "__main__":
-    tiempoNumpy = versionNumpy(tamaño)
+    # Creamos dos matrices con Numpy de numeros aleatorios entre 0 y 1
+    m1 = np.random.rand(TAMAÑO, TAMAÑO)
+    m2 = np.random.rand(TAMAÑO, TAMAÑO)
+
+    tiempoNumpy = versionNumpy(m1, m2)
     print(f"La función que utiliza Numpy terminó en: {tiempoNumpy:.2f} s")
 
-    tiempoBucle = versionBucle(tamaño)
+    tiempoBucle = versionBucle(TAMAÑO, m1, m2)
     print(f"La función que utiliza un bucle tradicional (for) terminó en: {tiempoBucle:.2f} s")
 
     aceleracion = tiempoBucle / tiempoNumpy
-
     print(f"La aceleración obtenida al utilizar Numpy es de: {aceleracion:.2f}")
 
     # Grafico de barras con escala logaritmica
