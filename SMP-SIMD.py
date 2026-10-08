@@ -29,17 +29,19 @@ def versionSecuencial(matriz):
 
     if DIRECCION == "filas":
         for i in range(filas):
+            fila = matriz[i].tolist()          # convierte la fila i a lista
             for j in range(columnas):
-                total = total + matriz[i][j]
+                total = total + fila[j]
     else:
         for j in range(columnas):
+            columna = matriz[:, j].tolist()    # convierte la columna j a lista
             for i in range(filas):
-                total = total + matriz[i][j]
+                total = total + columna[i]
 
     final = time.perf_counter()
 
     tiempo = final - inicio
-    return tiempo
+    return tiempo, total
 
 
 if __name__ == "__main__":
@@ -72,7 +74,10 @@ if __name__ == "__main__":
     finParalelo = time.perf_counter()
     tiempoParalelo = finParalelo - inicioParalelo
 
-    tiempoSecuencial = versionSecuencial(m1)
+    tiempoSecuencial, sumaSecuencial = versionSecuencial(m1)
+
+    # Verificación: ambas sumas deben coincidir (fuera de la medición de tiempo)
+    coinciden = np.isclose(sumaParalela, sumaSecuencial, rtol=1e-9)
 
     aceleracion = tiempoSecuencial / tiempoParalelo
 
@@ -80,3 +85,6 @@ if __name__ == "__main__":
     print(f"Tiempo secuencial: {tiempoSecuencial:.2f} s")
     print(f"Tiempo paralelo:   {tiempoParalelo:.2f} s")
     print(f"Aceleracion:       {aceleracion:.2f}")
+    print(f"Suma secuencial:   {sumaSecuencial:.4f}")
+    print(f"Suma paralela:     {sumaParalela:.4f}")
+    print(f"Las sumas coinciden: {coinciden}")
