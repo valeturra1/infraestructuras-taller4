@@ -82,9 +82,9 @@ if __name__ == "__main__":
     aceleracion = tiempoSecuencial / tiempoParalelo
 
     print(f"Direccion de suma: {DIRECCION}")
-    print(f"Tiempo secuencial: {tiempoSecuencial:.2f} s")
-    print(f"Tiempo paralelo:   {tiempoParalelo:.2f} s")
-    print(f"Aceleracion:       {aceleracion:.2f}")
+    print(f"Tiempo secuencial: {tiempoSecuencial:.4f} s")
+    print(f"Tiempo paralelo:   {tiempoParalelo:.4f} s")
+    print(f"Aceleracion:       {aceleracion:.4f}")
     print(f"Suma secuencial:   {sumaSecuencial:.4f}")
     print(f"Suma paralela:     {sumaParalela:.4f}")
     print(f"Las sumas coinciden: {coinciden}")

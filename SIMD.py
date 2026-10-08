@@ -57,17 +57,17 @@ if __name__ == "__main__":
     
 
     tiempoNumpy, multiplicacionNumpy = versionNumpy(m1, m2)
-    print(f"La función que utiliza Numpy terminó en: {tiempoNumpy:.2f} s")
+    print(f"La función que utiliza Numpy terminó en: {tiempoNumpy:.4f} s")
 
     tiempoBucle, multiplicacionBucles = versionBucle(TAMAÑO, l1, l2)
-    print(f"La función que utiliza un bucle tradicional (for) terminó en: {tiempoBucle:.2f} s")
+    print(f"La función que utiliza un bucle tradicional (for) terminó en: {tiempoBucle:.4f} s")
 
     # Comparación de resultados
     coinciden = np.allclose(multiplicacionNumpy, np.array(multiplicacionBucles))
     print(f"Los resultados coinciden: {coinciden}")
 
     aceleracion = tiempoBucle / tiempoNumpy
-    print(f"La aceleración obtenida al utilizar Numpy es de: {aceleracion:.2f}")
+    print(f"La aceleración obtenida al utilizar Numpy es de: {aceleracion:.4f}")
 
     # Grafico de barras con escala logaritmica
     nombres = ["Numpy", "Bucle for"]
