@@ -8,32 +8,41 @@ TAMAÑO = 1000
 def versionNumpy(m1, m2):
     inicio = time.perf_counter()
 
-    multiplicacion = np.dot(m1, m2)  # Hacemos el producto matricial con Numpy usando la funcion dot
+    multiplicacionNumpy = np.dot(m1, m2)  # Hacemos el producto matricial con Numpy usando la funcion dot
 
     fin = time.perf_counter()
 
     resultado = fin - inicio
 
-    return resultado
+    return resultado, multiplicacionNumpy
 
 
-def versionBucle(n, m1, m2):
+def versionBucle(n, l1, l2):
     inicio = time.perf_counter()
     
-    multiplicacion = [[0.0] * n for i in range(n)]  # Creamos la matriz para guardar el resultado de la multiplicacion, inicializada con ceros
+    # Creamos la matriz para guardar el resultado de la multiplicacion, inicializada con ceros
+    multiplicacionBucles = []
 
-    for i in range(n):      # i recorre las filas de m1
-        for j in range(n):  # j recorre las columnas de m2
+    for i in range(n):
+        fila = []
+
+        for j in range(n):
+            fila.append(0.0)
+
+        multiplicacionBucles.append(fila)
+
+    for i in range(n):      # i recorre las filas de l1
+        for j in range(n):  # j recorre las columnas de l2
             suma = 0.0
             for k in range(n):   # k recorre los elementos de la fila i y de la columna j
-                suma = suma + m1[i, k] * m2[k, j]
-            multiplicacion[i][j] = suma
+                suma = suma + l1[i][k] * l2[k][j]
+            multiplicacionBucles[i][j] = suma
 
     fin = time.perf_counter()
 
     resultado = fin - inicio
     
-    return resultado
+    return resultado, multiplicacionBucles
 
 
 if __name__ == "__main__":
@@ -41,11 +50,21 @@ if __name__ == "__main__":
     m1 = np.random.rand(TAMAÑO, TAMAÑO)
     m2 = np.random.rand(TAMAÑO, TAMAÑO)
 
-    tiempoNumpy = versionNumpy(m1, m2)
+    # Convertirmos las matrices con los mismos números en listas de listas
+    l1 = m1.tolist()
+    l2 = m2.tolist()
+
+    
+
+    tiempoNumpy, multiplicacionNumpy = versionNumpy(m1, m2)
     print(f"La función que utiliza Numpy terminó en: {tiempoNumpy:.2f} s")
 
-    tiempoBucle = versionBucle(TAMAÑO, m1, m2)
+    tiempoBucle, multiplicacionBucles = versionBucle(TAMAÑO, l1, l2)
     print(f"La función que utiliza un bucle tradicional (for) terminó en: {tiempoBucle:.2f} s")
+
+    # Comparación de resultados
+    coinciden = np.allclose(multiplicacionNumpy, np.array(multiplicacionBucles))
+    print(f"Los resultados coinciden: {coinciden}")
 
     aceleracion = tiempoBucle / tiempoNumpy
     print(f"La aceleración obtenida al utilizar Numpy es de: {aceleracion:.2f}")

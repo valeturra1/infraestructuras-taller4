@@ -1,5 +1,4 @@
 from concurrent.futures import ThreadPoolExecutor
-import numpy as np
 import time
 import random
 
