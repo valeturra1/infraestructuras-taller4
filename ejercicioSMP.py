@@ -1,6 +1,11 @@
-from concurrent.futures import ThreadPoolExecutor
+import threading
 import time
 import random
+
+#Función que guarda el resultado de sumarBloque en un arreglo global
+def tareaHilo(coordenadas, indice):
+    resultados[indice] = sumarBloque(coordenadas)
+
 
 #Función que recibe los índices de la matriz en tuplas, los  desempaqueta y
 # con dos fors recorre los rangos formados por los índices,
@@ -78,17 +83,31 @@ if __name__ == "__main__":
     
     timeSecuencial = time2S-time1S
 
-    #Versión paralela. El pool de hilos hace map de la función sumarBloque con las coordenadas ya definidas,
-    #los resultados se guardan en una lista, y esa lista se recorre, se suma y se guarda el resultado
-    #en sumaParalela
+    #Versión paralela. Inicializa un arreglo de resultados para cada bloque. Crea un hilo por bloque (100 hilos)
+    # y el hilo ejecuta una función que suma un bloque y lo guarda en el arreglo de resultados. Al final
+    #se suma secuencialmente el arreglo de resultados
+
+    resultados = []
+    for i in range(len(coordenadasBloques)):
+        resultados.append(0)
+
     time1P = time.perf_counter()
 
-    with ThreadPoolExecutor(max_workers=100) as executor:
-        resultados = list(executor.map(sumarBloque, coordenadasBloques))
+    # Un hilo por bloque
+    hilos = []
+    for i in range(len(coordenadasBloques)):
+        hilo = threading.Thread(target=tareaHilo, args=(coordenadasBloques[i], i))
+        hilos.append(hilo)
+
+    for hilo in hilos:
+        hilo.start()
+
+    for hilo in hilos:
+        hilo.join()
+
     sumaParalela = sumaTotal()
 
     time2P = time.perf_counter()
-
     timeParalelo = time2P-time1P
 
 
@@ -96,3 +115,4 @@ if __name__ == "__main__":
 
     print(f"Tiempo secuencial: {timeSecuencial}\nTiempo paralelo: {timeParalelo}\nAceleración: {aceleracion}\n")
     print(f"Suma paralela: {sumaParalela}\nSuma secuencial: {sumaSecuencial}\n")
+    print(f"Las sumas coinciden: {sumaParalela == sumaSecuencial}\n")
