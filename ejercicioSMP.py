@@ -1,12 +1,14 @@
 from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 import time
+import random
 
 #Función que recibe los índices de la matriz en tuplas, los  desempaqueta y
-# convierte en un bloque de la matriz de numpy
-#y suma ese bloque con numpy.sum(), retornando el resultado
+# con dos fors recorre los rangos formados por los índices,
+# acumulando cada valor en una variable que al final retorna
 def sumarBloque(coordenadas):
 
+    suma = 0
 
     numBloqueHorizontal, numBloqueVertical = coordenadas
 
@@ -16,10 +18,15 @@ def sumarBloque(coordenadas):
     columna_inicio = numBloqueVertical*100
     columna_fin = (numBloqueVertical+1)*100
 
-    bloque = matrix[fila_inicio:fila_fin, columna_inicio:columna_fin]
 
-    return np.sum(bloque)
-            
+    for i in range(fila_inicio, fila_fin):
+        for j in range(columna_inicio, columna_fin):
+            suma += matrix[i][j]
+
+
+
+
+    return suma
 
 
 #Función que recorre el arreglo de resultados y las acumula en una variable final que representa la suma
@@ -30,7 +37,7 @@ def sumaTotal():
         suma += number
     return suma
 
-#Implementación secuencial de sumar cada bloque y guarda el resultado
+#Implementación secuencial de sumar cada bloque y guardar el resultado
 def versionSecuencial():
 
     for coordenada in coordenadasBloques:
@@ -40,8 +47,19 @@ def versionSecuencial():
 
 if __name__ == "__main__":
 
-    matrix = np.random.randint(1, 101, size=(1000, 1000))
+    #Inicialización de la matriz
+    matrix = []
 
+    for i in range(1000):
+        row = []
+
+        for j in range(1000):
+            numeroAleatorio = random.randint(1, 100)
+
+            row.append(numeroAleatorio)
+
+        matrix.append(row)
+    
     #Coordenadas de los bloques en la matriz, tuplas de coordenadas en X y Y
     coordenadasBloques = []
 
